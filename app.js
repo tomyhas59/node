@@ -1,40 +1,12 @@
-import express from "express";
-import passport from "passport";
-import session from "express-session";
-import passportConfig from "./passport/index.js";
-import db from "./models/index.js";
-import user from "./routes/user.js";
-import post from "./routes/post.js";
+const express = require("express");
+const { Model } = require("sequelize");
 const app = express();
-app.set("port", 3000);
 
-db.sequelize
-  .sync()
-  .then(() => {
-    console.log("DB연결에 성공하였습니다");
-  })
-  .catch((err) => console.log(err));
+const home = require("./routes/home");
 
-passportConfig();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(
-  session({
-    secret: "node-secret",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      maxAge: 5 * 60000,
-    },
-  })
-);
+app.set("views", "./views");
+app.set("view engine", "ejs");
 
-app.use(passport.initialize());
-app.use(passport.session());
+app.use("/", home);
 
-app.use("/user", user);
-app.use("/post", post);
-app.listen(app.get("port"), () => {
-  console.log(`${app.get("port")}번 서버 실행 중`);
-});
+module.exports = app;
