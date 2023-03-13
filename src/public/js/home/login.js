@@ -12,7 +12,7 @@ const login = () => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: json.stringify(req),
+    body: JSON.stringify(req),
   });
 };
 
