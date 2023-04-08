@@ -1,15 +1,21 @@
+const postRouter = require("./routes/post");
 const express = require("express");
-const { json } = require("sequelize");
 const app = express();
 
-const home = require("./src/routes/home");
+app.get("/", (req, res) => {
+  res.send("hello express");
+});
 
-app.set("views", "./src/views");
-app.set("view engine", "ejs");
-app.use(express.static(`${__dirname}/src/public`));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.get("/", (req, res) => {
+  res.send("hello api");
+});
 
-app.use("/", home);
+app.get("/posts", (req, res) => {
+  res.json([{ id: 1, content: "hello" }]);
+});
 
-module.exports = app;
+app.use("/post", postRouter);
+
+app.listen(3065, () => {
+  console.log("서버 실행중");
+});
