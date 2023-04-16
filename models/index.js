@@ -1,25 +1,20 @@
-import Sequelize from "sequelize";
-import user from "./user.js";
-import config from "../config/config.js";
-import post from "./post.js";
-
+const Sequelize = require("sequelize");
 const env = process.env.NODE_ENV || "development";
-const dbconfig = config[env];
+const config = require("../config/config")[env];
 const db = {};
 
 const sequelize = new Sequelize(
-  dbconfig.database,
-  dbconfig.username,
-  dbconfig.password,
-  dbconfig
+  config.database,
+  config.username,
+  config.password,
+  config
 );
 
-db.User = user;
-db.Post = post;
-
-Object.keys(db).forEach((modelName) => {
-  db[modelName].init(sequelize);
-});
+db.User = require("./user.js")(sequelize, Sequelize);
+db.Post = require("./post.js")(sequelize, Sequelize);
+db.Image = require("./image.js")(sequelize, Sequelize);
+db.Comment = require("./comment.js")(sequelize, Sequelize);
+db.Hashtag = require("./hashtag.js")(sequelize, Sequelize);
 
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
@@ -30,4 +25,4 @@ Object.keys(db).forEach((modelName) => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-export default db;
+module.exports = db;
