@@ -1,8 +1,8 @@
-import passport from "passport";
-import local from "./local.js";
-import User from "../models/user.js";
+const passport = require("passport");
+const local = require("./local");
+const User = require("../models/user");
 
-export default () => {
+module.exports = () => {
   //세션 생성
   passport.serializeUser((user, done) => {
     done(null, user.id);
