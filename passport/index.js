@@ -5,7 +5,7 @@ const User = require("../models/user");
 module.exports = () => {
   //세션 생성
   passport.serializeUser((user, done) => {
-    done(null, user.id);
+    done(null, user.id); //첫 번째 인자 서버 에러, 두 번째 인자 성공or실패
   });
 
   //세션 데이터 해석 후 user 정보를 req.user에 담는 역할
@@ -13,9 +13,9 @@ module.exports = () => {
     try {
       const user = await User.findOne({ where: { id } });
       done(null, user);
-    } catch (err) {
-      console.log(err);
-      done(err);
+    } catch (error) {
+      console.log(error);
+      done(error);
     }
   });
   local();

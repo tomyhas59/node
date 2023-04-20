@@ -19,14 +19,10 @@ const passportVerify = async (email, password, done) => {
     const result = await bcrypt.compare(password, user.password);
     if (result) {
       return done(null, user); //두번째 인자가 성공or실패, 성공하면 정보 넘겨줌
-    } else {
-      return (
-        done(null, false),
-        {
-          error: "비밀번호가 올바르지 않습니다",
-        }
-      );
     }
+    return done(null, false, {
+      error: "비밀번호가 올바르지 않습니다",
+    });
   } catch (error) {
     console.log(error);
     return done(error);
