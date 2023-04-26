@@ -6,6 +6,42 @@ const passport = require("passport");
 const router = express.Router();
 const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
 
+router.get("/", async (req, res, next) => {
+  try {
+    if (req.user) {
+      const fullUserWithoutPassword = await User.findOne({
+        where: { id: req.user.id },
+        //attributes : ["id", "nickname", "email"], <- 이것만 가져오겠다
+        attributes: {
+          exclude: ["password"],
+        },
+        include: [
+          {
+            model: Post,
+            attributes: ["id"],
+          },
+          {
+            model: User,
+            as: "Followings",
+            attributes: ["id"],
+          },
+          {
+            model: User,
+            as: "Followers",
+            attributes: ["id"],
+          },
+        ],
+      });
+      res.status(200).json(fullUserWithoutPassword);
+    } else {
+      res.status(200).json(null);
+    }
+  } catch (ererr) {
+    console.error(ererr);
+    next(ererr);
+  }
+});
+
 router.post("/login", isNotLoggedIn, (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
@@ -61,7 +97,7 @@ router.post("/", isNotLoggedIn, async (req, res, next) => {
       nickname: req.body.nickname,
       password: hashedPassword,
     });
-    // res.setHeader("Access-Control-Allow-Origin", "http://localhost:3060");
+    // res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
     res.status(200).send("ok"); //200 성공, 201 잘 생성됨
   } catch (error) {
     console.error(error);

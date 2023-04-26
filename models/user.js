@@ -1,7 +1,8 @@
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
-    "User",
+    "User", //mySQL에서 users로 저장
     {
+      //id는 기본 제공
       email: {
         type: DataTypes.STRING(30), //STRING, TEXT, BOOLEAN, INTEGER(정수), FLOAT(실수) , DATETIME
         allowNull: false, //필수인지 아닌지 false면 필수
@@ -17,7 +18,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false, //필수인지 아닌지 false면 필수
       },
     },
-    { charset: "utf8", collate: "utf8_general_ci" } //한글 저장 }
+    {
+      charset: "utf8",
+      collate: "utf8_general_ci",
+    } //한글 저장 }
   );
   User.associate = (db) => {
     db.User.hasMany(db.Post);

@@ -1,4 +1,4 @@
-import cookieParser from "cookie-parser";
+/*import cookieParser from "cookie-parser";
 import express from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -61,3 +61,4 @@ app.get("/jwtshowcookie", (req, res) => {
 app.listen(app.get("port"), () => {
   console.log(`${app.get("port")}번으로 서버 실행중`);
 });
+*/

@@ -1,4 +1,4 @@
-import express from "express";
+/*import express from "express";
 import session from "express-session";
 const app = express();
 
@@ -42,3 +42,4 @@ app.post("/logout", (req, res) => {
 app.listen(app.get("port"), () => {
   console.log(`${app.get("port")}번으로 서버 실행중`);
 });
+*/
