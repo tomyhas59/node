@@ -30,12 +30,12 @@ module.exports = (sequelize, DataTypes) => {
     db.User.belongsToMany(db.User, {
       through: "Follow", //중간 테이블 이름
       as: "Followers",
-      foreingKey: "FollowingId", //column 이름 바꾸는 느낌
+      foreignKey: "FollowingId", //column 이름 바꾸는 느낌
     });
     db.User.belongsToMany(db.User, {
       through: "Follow", //중간 테이블 이름
       as: "Followings",
-      foreingKey: "FollowersId",
+      foreignKey: "FollowersId",
     });
   };
   return User;

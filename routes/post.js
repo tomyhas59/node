@@ -94,7 +94,7 @@ router.delete("/:postId/like", isLoggedIn, async (req, res, next) => {
       return res.status(403).send("게시글이 존재하지 않습니다.");
     }
     await post.removeLikers(req.user.id);
-    res.json({ PostId: post.id, UserId: req.user.id });
+    res.status(200).json({ PostId: post.id, UserId: req.user.id });
   } catch (error) {
     console.error(error);
     next(error);
@@ -117,3 +117,4 @@ router.delete("/:postId", isLoggedIn, async (req, res, next) => {
   }
 });
 module.exports = router;
+

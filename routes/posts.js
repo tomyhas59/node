@@ -9,7 +9,7 @@ router.get("/", async (req, res, next) => {
   try {
     const posts = await Post.findAll({
       //where: { id: lastId },
-      limit: 5,
+      limit: 2,
       //  offset: 0, //0~10  0에서 limit 만큼 가져와라
 
       order: [
