@@ -11,7 +11,7 @@ const session = require("express-session");
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
-
+const path = require("path");
 dotenv.config();
 db.sequelize
   .sync()
@@ -27,6 +27,7 @@ app.use(
     credentials: true, //쿠키 보내는 코드
   })
 );
+app.use("/", /*localhost:3065/와 같다*/ express.static(path.join(__dirname, "uploads")));
 app.use(morgan("dev"));
 app.use(express.json()); //req.body의 데이터를 보내는 역할
 app.use(express.urlencoded({ extended: true }));
