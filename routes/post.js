@@ -1,6 +1,6 @@
 const express = require("express");
 const multer = require("multer");
-const { Post, Image, Comment, User } = require("../models");
+const { Post, Image, Comment, User, Hashtag } = require("../models");
 const router = express.Router();
 const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
 const path = require("path");
@@ -30,10 +30,19 @@ const upload = multer({
 
 router.post("/", isLoggedIn, upload.none(), async (req, res, next) => {
   try {
+    const hashtags = req.body.content.match(/#[^\s#]+/g);
     const post = await Post.create({
       content: req.body.content,
       UserId: req.user.id,
     });
+    if (hashtags) {
+      const result = await Promise.all(
+        hashtags.map((tag) =>
+          Hashtag.findOrCreate({ where: { name: tag.slice(1).toLowerCase() } })
+        )
+      );
+      await post.addHashtags(result.map((v) => v[0]));
+    }
     if (req.body.image) {
       if (Array.isArray(req.body.image)) {
         //이미지를 여러 개 올리면 image: [1.png, 2.png] 배열로 올라감
