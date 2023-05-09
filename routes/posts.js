@@ -12,11 +12,7 @@ router.get("/", async (req, res, next) => {
       limit: 2,
       //  offset: 0, //0~10  0에서 limit 만큼 가져와라
 
-      order: [
-        ["createdAt", "DESC"],
-        [Conmment, "createdAt", "DESC"], //최신 게시글부터 로드 <-> ASC
-      ],
-
+      order: [["createdAt", "DESC"]],
       include: [
         {
           model: User,
@@ -36,15 +32,24 @@ router.get("/", async (req, res, next) => {
           ],
         },
         {
-          model: User, //게시글 작성자
+          model: User,
+          through: "Like",
+          as: "Likers",
           attributes: ["id"],
         },
         {
-          model: User,
-          as: "Likers",
-          attributes: ["id", "nickname"],
+          model: Post,
+          as: "Retweet",
+          include: [
+            {
+              model: User,
+              attributes: ["id", "nickname"],
+            },
+            {
+              model: Image,
+            },
+          ],
         },
-        //좋아요 누른 사람
       ],
     });
     console.log(posts);

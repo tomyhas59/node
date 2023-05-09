@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     //테이블명은 posts
     "Post",
     {
-      content: { type: DataTypes.TEXT, allowNull: false },
+      content: { type: DataTypes.TEXT, allowNull: false }, //RetweetId
     },
     { charset: "utf8mb4", collate: "utf8mb4_general_ci" } //한글, 이모티콘 저장 }
   );
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     db.Post.hasMany(db.Comment); //post.addComments 이런식으로 제공
     db.Post.hasMany(db.Image);
     db.Post.belongsToMany(db.User, { through: "Like", as: "Likers" });
-    db.Post.belongsTo(db.Post, { as: "Retweet" });
+    db.Post.belongsTo(db.Post, { as: "Retweet" }); //RetweetId 컬럼 생성
 
     //db.Post.hasOne(db.PostInfo) 일 대 일 관계
   };
