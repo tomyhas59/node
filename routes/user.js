@@ -36,9 +36,9 @@ router.get("/", async (req, res, next) => {
     } else {
       res.status(200).json(null);
     }
-  } catch (ererr) {
-    console.error(ererr);
-    next(ererr);
+  } catch (error) {
+    console.error(error);
+    next(error);
   }
 });
 

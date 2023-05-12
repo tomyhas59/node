@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { Post, Image, User, Conmment } = require("../models");
+const { Post, Image, User, Comment } = require("../models");
 
 const router = express.Router();
 
@@ -9,10 +9,10 @@ router.get("/", async (req, res, next) => {
   try {
     const posts = await Post.findAll({
       //where: { id: lastId },
-      limit: 2,
+      //  limit: 2,
       //  offset: 0, //0~10  0에서 limit 만큼 가져와라
 
-      order: [["createdAt", "DESC"]],
+      order: [["createdAt", "DESC"]], //DESC 내림차순 ASC 오름차순
       include: [
         {
           model: User,
@@ -22,7 +22,7 @@ router.get("/", async (req, res, next) => {
           model: Image,
         },
         {
-          model: Conmment,
+          model: Comment,
           include: [
             {
               model: User,

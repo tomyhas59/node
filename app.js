@@ -12,6 +12,7 @@ const passport = require("passport");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const path = require("path");
+
 dotenv.config();
 db.sequelize
   .sync()
@@ -27,7 +28,10 @@ app.use(
     credentials: true, //쿠키 보내는 코드
   })
 );
-app.use("/", /*localhost:3065/와 같다*/ express.static(path.join(__dirname, "uploads")));
+app.use(
+  "/",
+  /*localhost:3075/와 같다*/ express.static(path.join(__dirname, "uploads"))
+);
 app.use(morgan("dev"));
 app.use(express.json()); //req.body의 데이터를 보내는 역할
 app.use(express.urlencoded({ extended: true }));
@@ -42,14 +46,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
-app.get("/", (req, res) => {
-  res.send("hello express");
-});
-
-app.use("/posts", postsRouter);
 app.use("/post", postRouter);
+app.use("/posts", postsRouter);
 app.use("/user", userRouter);
 
-app.listen(3065, () => {
+app.listen(3075, () => {
   console.log("서버 실행중");
 });
