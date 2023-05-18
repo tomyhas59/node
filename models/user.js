@@ -24,13 +24,13 @@ module.exports = (sequelize, DataTypes) => {
     } //한글 저장 }
   );
   User.associate = (db) => {
-    db.User.hasMany(db.Post);
+    db.User.hasMany(db.Post), { as: "Posts" };
     db.User.hasMany(db.Comment);
     db.User.belongsToMany(db.Post, { through: "Like", as: "Liked" }); //중간 테이블 이름
     db.User.belongsToMany(db.User, {
       through: "Follow", //중간 테이블 이름
       as: "Followers",
-      foreignKey: "FollowingId", //column 이름 바꾸는 느낌
+      foreignKey: "FollowingsId", //column 이름 바꾸는 느낌
     });
     db.User.belongsToMany(db.User, {
       through: "Follow", //중간 테이블 이름
