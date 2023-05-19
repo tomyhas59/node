@@ -57,7 +57,7 @@ router.get("/", async (req, res, next) => {
       ],
       order: [["createdAt", "DESC"]], //DESC 내림차순 ASC 오름차순
     });
-    console.log(posts);
+
     res.status(200).json(posts);
   } catch (error) {
     console.error(error);
