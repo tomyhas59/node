@@ -1,8 +1,8 @@
 const express = require("express");
-const { User, Post } = require("../models");
+const { User, Post, Comment, Image } = require("../models");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
-
+const { Op } = require("sequelize");
 const router = express.Router();
 const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
 
@@ -249,6 +249,61 @@ router.delete("/follwer/:userId", isLoggedIn, async (req, res, next) => {
     }
     await user.removeFollowings(req.user.id);
     res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.get("/:userId/posts", async (req, res, next) => {
+  // = GET /user/1/posts
+  try {
+    const where = { UserId: req.params.userId }; //params = 상대의 아이디 찾을 때
+    if (parseInt(req.query.lastId, 10)) {
+      //초기 로딩이 아닐 때
+      where.id = { [Op.lt]: parseInt(req.query.lastId, 10) };
+    } //id가 lastId보다 작은 걸로 llimit개 불러와라
+    const posts = await Post.findAll({
+      where,
+      limit: 10,
+      //  offset: 0, //0~10  0에서 limit 만큼 가져와라
+      include: [
+        { model: User, attributes: ["id", "nickname"] },
+        { model: Image },
+        {
+          model: Comment,
+          include: [
+            {
+              model: User,
+              attributes: ["id", "nickname"],
+              order: [["createdAt", "DESC"]],
+            },
+          ],
+        },
+        {
+          model: User,
+          through: "Like",
+          as: "Likers",
+          attributes: ["id"],
+        },
+        {
+          model: Post,
+          as: "Retweet",
+          include: [
+            {
+              model: User,
+              attributes: ["id", "nickname"],
+            },
+            {
+              model: Image,
+            },
+          ],
+        },
+      ],
+      order: [["createdAt", "DESC"]], //DESC 내림차순 ASC 오름차순
+    });
+
+    res.status(200).json(posts);
   } catch (error) {
     console.error(error);
     next(error);

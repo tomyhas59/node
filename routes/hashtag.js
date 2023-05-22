@@ -1,11 +1,10 @@
 const express = require("express");
-
-const { Post, Image, User, Comment } = require("../models");
-const { Op } = require("sequelize");
+const { Hashtag, Post, Image, User, Comment } = require("../models");
 const router = express.Router();
+const { Op } = require("sequelize");
 
-router.get("/", async (req, res, next) => {
-  // = GET /posts
+router.get("/:hashtag", async (req, res, next) => {
+  // = GET /hashtag/노드
   try {
     const where = {};
     if (parseInt(req.query.lastId, 10)) {
@@ -18,8 +17,26 @@ router.get("/", async (req, res, next) => {
       //  offset: 0, //0~10  0에서 limit 만큼 가져와라
 
       include: [
-        { model: User, attributes: ["id", "nickname"] },
-        { model: Image },
+        {
+          model: Hashtag,
+          where: { name: decodeURIComponent(req.params.hashtag) },
+          include: [
+            {
+              model: User,
+              attributes: ["id", "nickname"],
+            },
+            {
+              model: Image,
+            },
+          ],
+        },
+        {
+          model: User,
+          attributes: ["id", "nickname"],
+        },
+        {
+          model: Image,
+        },
         {
           model: Comment,
           include: [
@@ -36,19 +53,6 @@ router.get("/", async (req, res, next) => {
           as: "Likers",
           attributes: ["id"],
         },
-        {
-          model: Post,
-          as: "Retweet",
-          include: [
-            {
-              model: User,
-              attributes: ["id", "nickname"],
-            },
-            {
-              model: Image,
-            },
-          ],
-        },
       ],
       order: [["createdAt", "DESC"]], //DESC 내림차순 ASC 오름차순
     });
@@ -59,5 +63,4 @@ router.get("/", async (req, res, next) => {
     next(error);
   }
 });
-
 module.exports = router;

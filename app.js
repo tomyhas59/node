@@ -1,6 +1,7 @@
 const postRouter = require("./routes/post");
 const postsRouter = require("./routes/posts");
 const userRouter = require("./routes/user");
+const hashtagRouter = require("./routes/hashtag");
 const cors = require("cors");
 const express = require("express");
 const dotenv = require("dotenv");
@@ -49,6 +50,7 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use("/post", postRouter);
 app.use("/posts", postsRouter);
 app.use("/user", userRouter);
+app.use("/hashtag", hashtagRouter);
 
 app.listen(3075, () => {
   console.log("서버 실행중");
