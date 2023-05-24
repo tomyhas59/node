@@ -6,13 +6,11 @@ const { Op } = require("sequelize");
 router.get("/:hashtag", async (req, res, next) => {
   // = GET /hashtag/노드
   try {
-    const where = {};
     if (parseInt(req.query.lastId, 10)) {
       //초기 로딩이 아닐 때
       where.id = { [Op.lt]: parseInt(req.query.lastId, 10) };
     } //id가 lastId보다 작은 걸로 llimit개 불러와라
     const posts = await Post.findAll({
-      where,
       limit: 10,
       //  offset: 0, //0~10  0에서 limit 만큼 가져와라
 
@@ -20,15 +18,6 @@ router.get("/:hashtag", async (req, res, next) => {
         {
           model: Hashtag,
           where: { name: decodeURIComponent(req.params.hashtag) },
-          include: [
-            {
-              model: User,
-              attributes: ["id", "nickname"],
-            },
-            {
-              model: Image,
-            },
-          ],
         },
         {
           model: User,
@@ -38,20 +27,23 @@ router.get("/:hashtag", async (req, res, next) => {
           model: Image,
         },
         {
-          model: Comment,
-          include: [
-            {
-              model: User,
-              attributes: ["id", "nickname"],
-              order: [["createdAt", "DESC"]],
-            },
-          ],
-        },
-        {
           model: User,
           through: "Like",
           as: "Likers",
           attributes: ["id"],
+        },
+        {
+          model: Post,
+          as: "Retweet",
+          include: [
+            {
+              model: User,
+              attributes: ["id", "nickname"],
+            },
+            {
+              model: Image,
+            },
+          ],
         },
       ],
       order: [["createdAt", "DESC"]], //DESC 내림차순 ASC 오름차순
