@@ -8,8 +8,8 @@ const dotenv = require("dotenv");
 const app = express();
 const db = require("./models");
 const passportConfig = require("./passport");
-const session = require("express-session");
 const passport = require("passport");
+const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const path = require("path");
@@ -21,8 +21,8 @@ db.sequelize
     console.log("db 연결 성공");
   })
   .catch(console.error);
-passportConfig();
 
+passportConfig();
 app.use(
   cors({
     origin: "http://localhost:3000",

@@ -28,6 +28,29 @@ const upload = multer({
   limits: { fileSize: 28 * 1024 * 1024 }, //20MB
 });
 
+router.post(
+  "/images",
+  isLoggedIn,
+  upload.array("image"), //single = 하나만, none= 텍스트
+  async (req, res, next) => {
+    console.log(req.files);
+    res.json(req.files.map((v) => v.filename));
+    try {
+      await Post.destroy({
+        where: {
+          id: req.params.postId,
+          UserId: req.user.id,
+        },
+      });
+
+      res.status(200).json({ PostId: parseInt(req.params.postId, 10) });
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
+);
+
 router.post("/", isLoggedIn, upload.none(), async (req, res, next) => {
   try {
     const hashtags = req.body.content.match(/#[^\s#]+/g);
@@ -165,28 +188,6 @@ router.delete("/:postId", isLoggedIn, async (req, res, next) => {
   }
 });
 
-router.post(
-  "/images",
-  isLoggedIn,
-  upload.array("image"), //single = 하나만, none= 텍스트
-  async (req, res, next) => {
-    console.log(req.files);
-    res.json(req.files.map((v) => v.filename));
-    try {
-      await Post.destroy({
-        where: {
-          id: req.params.postId,
-          UserId: req.user.id,
-        },
-      });
-
-      res.status(200).json({ PostId: parseInt(req.params.postId, 10) });
-    } catch (error) {
-      console.error(error);
-      next(error);
-    }
-  }
-);
 router.get("/:postId", async (req, res, next) => {
   try {
     //GET / post /1
