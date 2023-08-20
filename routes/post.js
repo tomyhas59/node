@@ -1,10 +1,10 @@
 const express = require("express");
 const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 const { Post, Image, Comment, User, Hashtag } = require("../models");
 const router = express.Router();
 const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
-const path = require("path");
-const fs = require("fs");
 
 try {
   fs.accessSync("uploads");
@@ -16,7 +16,7 @@ try {
 const upload = multer({
   storage: multer.diskStorage({
     destination(req, file, done) {
-      done(null, "uploads"); //저장 폴더
+      done(null, "uploads/"); //저장 폴더
     },
     filename(req, file, done) {
       //우자.png
