@@ -16,7 +16,7 @@ try {
 const upload = multer({
   storage: multer.diskStorage({
     destination(req, file, done) {
-      done(null, "uploads/"); //저장 폴더
+      done(null, "uploads"); //저장 폴더
     },
     filename(req, file, done) {
       //우자.png
@@ -32,22 +32,9 @@ router.post(
   "/images",
   isLoggedIn,
   upload.array("image"), //single = 하나만, none= 텍스트
-  async (req, res, next) => {
+  async (req, res) => {
     console.log(req.files);
     res.json(req.files.map((v) => v.filename));
-    try {
-      await Post.destroy({
-        where: {
-          id: req.params.postId,
-          UserId: req.user.id,
-        },
-      });
-
-      res.status(200).json({ PostId: parseInt(req.params.postId, 10) });
-    } catch (error) {
-      console.error(error);
-      next(error);
-    }
   }
 );
 
